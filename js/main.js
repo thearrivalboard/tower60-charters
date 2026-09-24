@@ -1,4 +1,4 @@
-// Tower 60 Charters - shared site behavior
+// Tower60 Charter - shared site behavior
 
 document.addEventListener('DOMContentLoaded', function () {
   // Mobile nav toggle
