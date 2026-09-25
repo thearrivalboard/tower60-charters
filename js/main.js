@@ -88,15 +88,32 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Inquiry form
-  // NOTE: no email backend is wired yet. This depends on the Step 0 hosting
-  // discovery (WordPress vs static GoDaddy hosting) called out in the project
-  // brief, and must be confirmed with JM before connecting a live send method
-  // (PHP mail/SMTP or a third-party form service).
+  // Sends via mailto: (no server, no third-party form service). The visitor's
+  // own email client opens with the details pre-filled; they still have to
+  // hit send from there to complete the request.
   var form = document.getElementById('inquiry-form');
   var success = document.getElementById('form-success');
   if (form && success) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      var lines = [];
+      var fields = form.querySelectorAll('input[name], textarea[name]');
+      fields.forEach(function (field) {
+        if (!field.value) return;
+        var label = form.querySelector('label[for="' + field.id + '"]');
+        var labelText = label ? label.textContent.trim() : field.name;
+        lines.push(labelText + ': ' + field.value);
+      });
+
+      var subject = 'New charter request — Tower60 Charter';
+      var body = lines.join('\n');
+      var mailtoUrl = 'mailto:alexabad@alexabadrealestate.com'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailtoUrl;
+
       form.style.display = 'none';
       success.classList.add('visible');
     });
